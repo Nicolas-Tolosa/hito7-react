@@ -1,40 +1,49 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// frontend/src/routes/AppRoutes.jsx (Ejemplo de implementación de rutas)
 
-// Componentes globales
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from '../pages/Home';
+import Cart from '../pages/Cart';
+import PizzaDetail from '../pages/Pizza';
+import Navbar from '../components/Navbar';
 
-
-// Páginas
-import Home from "../pages/Home";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
-import Cart from "../pages/Cart";
-import Pizza from "../pages/Pizza";
-import NotFound from "../pages/NotFound";
-import Profile from "../pages/Profile";
-
+import { ProtectedRoute, AuthRedirect } from './ProtectedRoute';
+import ProfilePage from '../pages/Profile';
+import LoginPage from '../pages/Login';
+import RegisterPage from '../pages/Register';
 
 const AppRoutes = () => {
   return (
-    <Router basename="/">
-      <Navbar></Navbar>
-    
-      <div className="min-h-screen">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/pizza/p001" element={<Pizza />}/>
-          <Route path="/404" element={<NotFound />}/>
-          <Route path="profile" element={<Profile />} />
-        </Routes>
-      </div>
-      
-      <Footer />
-    </Router>
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+
+        {/* Rutas Públicas */}
+        <Route path="/" element={<Home />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/pizza/:id" element={<PizzaDetail />} />
+
+        {/* RUTA PROTEGIDA para /profile: Si no hay token, va a /login */}
+        <Route element={<ProtectedRoute redirectTo="/login" />}>
+          <Route path="/profile" element={<ProfilePage />} />
+        </Route>
+
+        {/* RUTAS DE AUTENTICACIÓN con redirección: Si hay token, va a / */}
+        <Route element={<AuthRedirect redirectTo="/" />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Route>
+
+        {/* Ruta de error 404 (opcional) */}
+        <Route path="*" element={
+          <div className="text-center mt-20">
+            <h1 className="text-3xl font-bold">404</h1>
+            <p>Página no encontrada.</p>
+          </div>
+        } />
+
+      </Routes>
+    </BrowserRouter>
   );
 };
 

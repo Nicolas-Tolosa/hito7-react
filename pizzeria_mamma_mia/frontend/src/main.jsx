@@ -1,19 +1,24 @@
-// main.jsx (Para referencia y confirmación)
+// frontend/src/main.jsx (Fragmento modificado)
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
+
+// Importaciones de Context
+import { PizzaProvider } from './context/PizzaContext.jsx'
+import { CartProvider } from './context/CartContext.jsx'
+import { UserProvider } from './context/UserContext.jsx' // <-- NUEVA IMPORTACIÓN
+
 import AppRoutes from './routes/AppRoutes.jsx'
 
-import { CartProvider } from './context/CartContext.jsx'
-import { PizzaProvider } from './context/PizzaContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {/* PizzaProvider debe estar fuera de CartProvider para que CartProvider acceda a sus datos */}
     <PizzaProvider>
       <CartProvider>
-        <AppRoutes />
+        <UserProvider>
+          <AppRoutes />
+        </UserProvider>
       </CartProvider>
     </PizzaProvider>
   </StrictMode>,
